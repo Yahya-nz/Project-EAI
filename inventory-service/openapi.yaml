@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  title: Inventory Service API
+  version: 1.0.0
+  description: API untuk mengelola produk, stok, dan pergerakan stok.
+servers:
+  - url: http://localhost:3002
+paths:
+  /health:
+    get:
+      summary: Health check Inventory Service
+      responses:
+        "200":
+          description: Service aktif
+  /products:
+    get:
+      summary: Melihat semua produk
+      responses:
+        "200":
+          description: Daftar produk
+  /products/{id}:
+    get:
+      summary: Melihat detail produk berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: P001
+      responses:
+        "200":
+          description: Detail produk
+        "404":
+          description: Produk tidak ditemukan
+  /stock/reduce:
+    post:
+      summary: Mengurangi stok berdasarkan transaksi penjualan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReduceStockRequest"
+            example:
+              referenceId: SALE-001
+              items:
+                - productId: P001
+                  quantity: 2
+      responses:
+        "200":
+          description: Stok berhasil dikurangi
+        "400":
+          description: Request tidak valid
+        "409":
+          description: Produk tidak ditemukan atau stok tidak cukup
+  /stock-movements:
+    get:
+      summary: Melihat riwayat pergerakan stok
+      responses:
+        "200":
+          description: Daftar pergerakan stok
+components:
+  schemas:
+    ReduceStockRequest:
+      type: object
+      required:
+        - referenceId
+        - items
+      properties:
+        referenceId:
+          type: string
+          example: SALE-001
+        items:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required:
+              - productId
+              - quantity
+            properties:
+              productId:
+                type: string
+                example: P001
+              quantity:
+                type: integer
+                example: 2

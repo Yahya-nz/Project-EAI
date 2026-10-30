@@ -1,0 +1,16 @@
+{
+  "name": "integration-service",
+  "version": "1.0.0",
+  "description": "Integration layer for retail enterprise integration project",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

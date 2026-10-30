@@ -1,0 +1,91 @@
+openapi: 3.0.3
+info:
+  title: Accounting Service API
+  version: 1.0.0
+  description: API untuk mencatat jurnal transaksi penjualan. Endpoint jurnal menerima JSON atau XML.
+servers:
+  - url: http://localhost:3003
+paths:
+  /health:
+    get:
+      summary: Health check Accounting Service
+      responses:
+        "200":
+          description: Service aktif
+  /journals:
+    post:
+      summary: Membuat jurnal transaksi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateJournalRequest"
+            example:
+              referenceId: SALE-001
+              description: Sales transaction from POS
+              debitAccount: Cash
+              creditAccount: Sales Revenue
+              amount: 300000
+          application/xml:
+            schema:
+              type: string
+            example: |
+              <journal>
+                <referenceId>SALE-001</referenceId>
+                <description>Sales transaction from POS</description>
+                <debitAccount>Cash</debitAccount>
+                <creditAccount>Sales Revenue</creditAccount>
+                <amount>300000</amount>
+              </journal>
+      responses:
+        "201":
+          description: Jurnal berhasil dibuat
+        "400":
+          description: Request tidak valid
+    get:
+      summary: Melihat semua jurnal
+      responses:
+        "200":
+          description: Daftar jurnal
+  /journals/{id}:
+    get:
+      summary: Melihat detail jurnal berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: JRN-1717322400000-abcd1234
+      responses:
+        "200":
+          description: Detail jurnal
+        "404":
+          description: Jurnal tidak ditemukan
+components:
+  schemas:
+    CreateJournalRequest:
+      type: object
+      required:
+        - referenceId
+        - description
+        - debitAccount
+        - creditAccount
+        - amount
+      properties:
+        referenceId:
+          type: string
+          example: SALE-001
+        description:
+          type: string
+          example: Sales transaction from POS
+        debitAccount:
+          type: string
+          example: Cash
+        creditAccount:
+          type: string
+          example: Sales Revenue
+        amount:
+          type: integer
+          example: 300000

@@ -1,0 +1,68 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: retail-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pos-service:
+    build: ./pos-service
+    container_name: retail-pos-service
+    env_file:
+      - .env
+    ports:
+      - "${POS_PORT:-3001}:3001"
+    volumes:
+      - pos_data:/data
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: retail-inventory-service
+    env_file:
+      - .env
+    ports:
+      - "${INVENTORY_PORT:-3002}:3002"
+    volumes:
+      - inventory_data:/data
+
+  accounting-service:
+    build: ./accounting-service
+    container_name: retail-accounting-service
+    env_file:
+      - .env
+    ports:
+      - "${ACCOUNTING_PORT:-3003}:3003"
+    volumes:
+      - accounting_data:/data
+
+  integration-service:
+    build: ./integration-service
+    container_name: retail-integration-service
+    env_file:
+      - .env
+    ports:
+      - "${INTEGRATION_PORT:-3004}:3004"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      inventory-service:
+        condition: service_started
+      accounting-service:
+        condition: service_started
+
+volumes:
+  rabbitmq_data:
+  pos_data:
+  inventory_data:
+  accounting_data:

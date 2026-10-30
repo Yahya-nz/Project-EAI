@@ -1,0 +1,120 @@
+{
+  "capturedAt": "2026-10-30T12:34:35.517Z",
+  "environment": {
+    "mode": "native-local",
+    "node": "v26.0.0",
+    "rabbitmq": "4.4.0"
+  },
+  "request": {
+    "buyerName": "Budi",
+    "paymentMethod": "cash",
+    "items": [
+      {
+        "productId": "P001",
+        "name": "Keyboard",
+        "quantity": 2,
+        "price": 150000
+      }
+    ]
+  },
+  "before": {
+    "data": {
+      "id": "P001",
+      "name": "Keyboard",
+      "stock": 10,
+      "price": 150000,
+      "updatedAt": "2026-10-30T12:34:26.077Z"
+    }
+  },
+  "sale": {
+    "message": "Sale created and sale.created event published",
+    "sale": {
+      "id": "SALE-1793363670735",
+      "buyerName": "Budi",
+      "paymentMethod": "cash",
+      "totalAmount": 300000,
+      "status": "CREATED",
+      "createdAt": "2026-10-30T12:34:30.735Z",
+      "items": [
+        {
+          "productId": "P001",
+          "name": "Keyboard",
+          "quantity": 2,
+          "price": 150000,
+          "subtotal": 300000
+        }
+      ]
+    },
+    "event": {
+      "eventId": "1f1a1126-2575-4d1c-80d8-d9f6140b6737",
+      "eventType": "sale.created",
+      "occurredAt": "2026-10-30T12:34:30.742Z",
+      "source": "pos-service",
+      "data": {
+        "saleId": "SALE-1793363670735",
+        "buyerName": "Budi",
+        "paymentMethod": "cash",
+        "totalAmount": 300000,
+        "items": [
+          {
+            "productId": "P001",
+            "name": "Keyboard",
+            "quantity": 2,
+            "price": 150000,
+            "subtotal": 300000
+          }
+        ]
+      }
+    }
+  },
+  "after": {
+    "data": {
+      "id": "P001",
+      "name": "Keyboard",
+      "stock": 8,
+      "price": 150000,
+      "updatedAt": "2026-10-30T12:34:30.867Z"
+    }
+  },
+  "movements": {
+    "data": [
+      {
+        "id": 1,
+        "referenceId": "SALE-1793363670735",
+        "productId": "P001",
+        "movementType": "OUT",
+        "quantity": 2,
+        "createdAt": "2026-10-30T12:34:30.867Z"
+      }
+    ]
+  },
+  "journals": {
+    "data": [
+      {
+        "id": "JRN-1793363670899-cdc8ab26",
+        "referenceId": "SALE-1793363670735",
+        "description": "Sales transaction from POS for Budi",
+        "debitAccount": "Cash",
+        "creditAccount": "Sales Revenue",
+        "amount": 300000,
+        "sourceFormat": "XML",
+        "createdAt": "2026-10-30T12:34:30.899Z"
+      }
+    ]
+  },
+  "health": {
+    "service": "integration-service",
+    "status": "UP",
+    "integration": {
+      "connected": true,
+      "processedMessages": 1,
+      "failedMessages": 0,
+      "lastProcessedAt": "2026-10-30T12:34:30.911Z",
+      "lastError": null,
+      "exchangeName": "sales.events",
+      "queueName": "integration.sale.created",
+      "failedQueueName": "integration.failed",
+      "routingKey": "sale.created"
+    }
+  }
+}
